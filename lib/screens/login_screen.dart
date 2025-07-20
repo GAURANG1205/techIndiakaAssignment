@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techindiakassignment/screens/groupchat_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   final usernameController = TextEditingController();
@@ -25,30 +26,35 @@ class LoginScreen extends StatelessWidget {
                   child: Text(
                     "Enter Username",
                     style: TextStyle(
-                      fontSize: size.width * 0.045,
+                      fontSize: isWide ? size.width * 0.02 : size.width * 0.045,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 TextField(
                   controller: usernameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'e.g. gaurang_123',
+                    hintText: "e.g. gaurang_123",
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
                       final username = usernameController.text.trim();
                       if (username.isNotEmpty) {
-
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => GroupchatScreen(username: username),
+                          ),
+                        );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Please enter a username")),
+                          const SnackBar(content: Text("Please enter a username")),
                         );
                       }
                     },
@@ -60,7 +66,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     child: const Text(
                       "Join Chat",
-                      style: TextStyle(fontSize: 16,color: Colors.blue),
+                      style: TextStyle(fontSize: 16, color: Colors.blue),
                     ),
                   ),
                 ),

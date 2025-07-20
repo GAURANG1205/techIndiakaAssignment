@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Realtime Chat App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
       home:LoginScreen()
     );
