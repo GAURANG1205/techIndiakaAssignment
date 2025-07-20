@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../logic/socket_manager.dart';
 
 class GroupchatScreen extends StatefulWidget {
   final String username;
@@ -9,19 +10,57 @@ class GroupchatScreen extends StatefulWidget {
 }
 
 class _GroupchatScreenState extends State<GroupchatScreen> {
+  final SocketManager socketManager = SocketManager();
   final TextEditingController messageController = TextEditingController();
   final List<String> messages = [];
 
   @override
   void initState() {
     super.initState();
+    socketManager.connect(
+      user: widget.username,
+      onNewMessage: (data) {
+        setState(() {
+          messages.add("${data['username']}: ${data['message']}");
+        });
+      },
+      onUserJoined: (data) {
+        setState(() {
+          messages.add("${data['username']} joined the chat");
+        });
+      },
+      onUserLeft: (data) {
+        setState(() {
+          messages.add("${data['username']} left the chat");
+        });
+      },
+    );
   }
 
+
+  @override
+  void dispose() {
+    socketManager.dispose();
+    messageController.dispose();
+    super.dispose();
+  }
+
+  void sendMessage() {
+    final msg = messageController.text.trim();
+    if (msg.isNotEmpty) {
+      socketManager.sendMessage(msg);
+      setState(() {
+        messages.add("You: $msg");
+        messageController.clear();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final isWide = size.width > 600;
+
     return Scaffold(
       appBar: AppBar(title: Text("Chat as ${widget.username}")),
       body: Center(
@@ -70,11 +109,12 @@ class _GroupchatScreenState extends State<GroupchatScreen> {
                             border: InputBorder.none,
                             hintText: "Type a message...",
                           ),
+                          onSubmitted: (_) => sendMessage(),
                         ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.send),
-                        onPressed: (){},
+                        onPressed: sendMessage,
                       ),
                     ],
                   ),
