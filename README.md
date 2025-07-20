@@ -62,4 +62,25 @@ The following socket events are integrated in the Flutter app via `SocketManager
 
 ---
 
-  All socket logic is handled in the `SocketManager` class. The class ensures proper connection, event binding, and cleanup using `dispose()`.
+ All socket logic is handled in the `SocketManager` class. The class ensures proper connection, event binding, and cleanup using `dispose()`.
+
+##  Dependencies
+
+Make sure to add the following in `pubspec.yaml`:
+
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  socket_io_client: ^2.0.0
+
+---
+
+## Clone and run the Socket.IO test server
+
+git clone https://github.com/socketio/socket.io.git
+cd socket.io/examples/chat
+npm install
+node index.js
+- Server runs on http://localhost:3000
+
