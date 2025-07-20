@@ -13,7 +13,7 @@ class _GroupchatScreenState extends State<GroupchatScreen> {
   final SocketManager socketManager = SocketManager();
   final TextEditingController messageController = TextEditingController();
   final List<String> messages = [];
-
+  final Set<String> typingUsers = {};
   @override
   void initState() {
     super.initState();
@@ -32,6 +32,16 @@ class _GroupchatScreenState extends State<GroupchatScreen> {
       onUserLeft: (data) {
         setState(() {
           messages.add("${data['username']} left the chat");
+        });
+      },
+      onTyping: (data) {
+        setState(() {
+          typingUsers.add(data['username']);
+        });
+      },
+      onStopTyping: (data) {
+        setState(() {
+          typingUsers.remove(data['username']);
         });
       },
     );
@@ -69,6 +79,20 @@ class _GroupchatScreenState extends State<GroupchatScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Column(
             children: [
+              if (typingUsers.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "${typingUsers.join(', ')} is typing...",
+                      style: const TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
               Expanded(
                 child: messages.isEmpty
                     ? const Center(child: Text("No messages yet..."))

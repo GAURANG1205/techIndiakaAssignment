@@ -10,6 +10,8 @@ class SocketManager {
     required Function(dynamic) onNewMessage,
     required Function(dynamic) onUserJoined,
     required Function(dynamic) onUserLeft,
+    required Function(dynamic) onTyping,
+    required Function(dynamic) onStopTyping,
   }) {
     username = user;
     final serverUrl = kIsWeb
@@ -32,14 +34,22 @@ class SocketManager {
     socket.on('new message', onNewMessage);
     socket.on('user joined', onUserJoined);
     socket.on('user left', onUserLeft);
-
+    socket.on('typing', onTyping);
+    socket.on('stop typing', onStopTyping);
     socket.onDisconnect((_) => print('Disconnected'));
   }
 
   void sendMessage(String message) {      //This is used For Sending Message
     socket.emit('new message', message);
   }
+  // it show Typing indicator
+  void startTyping() {
+    socket.emit('typing');
+  }
 
+  void stopTyping() {
+    socket.emit('stop typing');
+  }
   void dispose() { // Its for Dispose the connection
     socket.disconnect();
   }
