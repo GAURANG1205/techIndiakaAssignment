@@ -59,6 +59,7 @@ class _GroupchatScreenState extends State<GroupchatScreen> {
     final msg = messageController.text.trim();
     if (msg.isNotEmpty) {
       socketManager.sendMessage(msg);
+      socketManager.stopTyping();
       setState(() {
         messages.add("You: $msg");
         messageController.clear();
@@ -133,6 +134,7 @@ class _GroupchatScreenState extends State<GroupchatScreen> {
                             border: InputBorder.none,
                             hintText: "Type a message...",
                           ),
+                          onChanged: (_)=>socketManager.startTyping(),
                           onSubmitted: (_) => sendMessage(),
                         ),
                       ),
